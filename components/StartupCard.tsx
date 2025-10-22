@@ -5,6 +5,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from './ui/button'
 
+export type StartupTypeCard = Omit<Startup, "author"> & { author?: Author };
+
 const StartupCard = ({post}:{ post: StartupTypeCard}) => {
     const{_createdAt, views , author: {_id: authorId, name},title,category, _id , image, description}=post;
   return (

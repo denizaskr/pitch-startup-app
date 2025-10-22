@@ -1,22 +1,20 @@
 import SearchForm from "@/components/SearchForm";
 import StartupCard from "@/components/StartupCard";
-
+import { StartupTypeCard } from "@/components/StartupCard";
+import { sanityFetch } from "@/sanity/lib/live";
+import { auth } from "../../../auth";
+import { STARTUPS_QUERY } from "@/lib/queries";
 export default async function Home({searchParams}:{searchParams: Promise<{query?:string}>}) {
 
-  const query =(await searchParams).query;
+  const query = (await searchParams).query;
+  const params = { search: query || null };
 
-  const posts =[
-    {
-      _createdAt:new Date(),
-      views:55,
-      author:{_id:1, name:'Adrian'},
-      _id:1,
-      description:"This is a description",
-      image:"https://unsplash.com/photos/person-in-orange-and-white-robot-costume-eZWGK5sIiBM",
-      category:"Robots",
-      title:"We Robots",
-    }
-  ]
+  const session = await auth();
+
+  console.log(session?.id);
+
+  const { data: posts } = await sanityFetch({ query: STARTUPS_QUERY, params });
+
   return (
     <>
     <section className="pink_container">
@@ -25,15 +23,23 @@ export default async function Home({searchParams}:{searchParams: Promise<{query?
    <SearchForm  query={query}/>
     </section>
     <section className="section_container">
-      <p className="text-30-semibold">
-        {query? `Search results for "${query}"` : "All Startups"}
-        <ul className="mt-7  card_grid">
-        {posts?.length > 0 ? (
-          posts.map((StartupCardType)=>(<StartupCard key={post?._id} post={post}/>))
-        ):(<p className="no-results">No startups found</p>)} </ul>
-      </p>
+        <p className="text-30-semibold">
+          {query ? `Search results for "${query}"` : "All Startups"}
+        </p>
 
-    </section>
+        <ul className="mt-7 card_grid">
+          {posts?.length > 0 ? (
+            // posts.map((post: StartupTypeCard , index:number)  => (
+            //   <StartupCard key={post?._id || index} post={post} />
+            // ))
+            posts?.filter(Boolean).map((post: StartupTypeCard, index: number) => (
+              <StartupCard key={post?._id ?? index} post={post} />
+            ))
+          ) : (
+            <p className="no-results">No startups found</p>
+          )}
+        </ul>
+      </section>
   
     </>
   );
