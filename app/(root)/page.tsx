@@ -29,9 +29,6 @@ export default async function Home({searchParams}:{searchParams: Promise<{query?
 
         <ul className="mt-7 card_grid">
           {posts?.length > 0 ? (
-            // posts.map((post: StartupTypeCard , index:number)  => (
-            //   <StartupCard key={post?._id || index} post={post} />
-            // ))
             posts?.filter(Boolean).map((post: StartupTypeCard, index: number) => (
               <StartupCard key={post?._id ?? index} post={post} />
             ))

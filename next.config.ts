@@ -8,7 +8,14 @@ const nextConfig: NextConfig = {
     hostname: '*',
   }
 ]
- }
+ },
+cacheComponents: true,
+ devIndicators: {
+  appIsrStatus: true,
+  buildActivity: true,
+  buildActivityPosition: "bottom-right",
+},
+
 };
 
 export default nextConfig;
